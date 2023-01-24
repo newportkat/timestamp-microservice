@@ -8,33 +8,30 @@ app.listen(port, () => {
    console.log(`App is listening at http://localhost:${port}/`)
 })
 
-//set up date endpoint
-app.get(
-   "/api/test",
-   (req, res, next) => {
-      //get date
-      const utc = new Date().toString()
-      const unix = Date.now()
-      req.utc = utc
-      req.unix = unix
-      next()
-   },
-   (req, res) => {
-      //send date
-      res.send({
-         date: req.utc,
-         unix: req.unix,
-      })
-   }
-)
+//create/api/ endpoint
+app.get("/api", (req, res) => {
+   //create current date objects and assign to variables
+   const unix = Date.now()
+   const utc = new Date().toUTCString()
 
-app.get("/api/:date", (req, res, next) => {
+   //send json object to client
+   res.send({
+      unix: unix,
+      utc: utc,
+   })
+})
+
+//create /api/:date endpoint
+app.get("/api/:date", (req, res) => {
    //create variable from user input
    const input = req.params.date
 
    //create regular expressions to validate input from user
    const dateRegex = /^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[012])-\d{4}$/
+
    const intRegex = /^-?\d+$/
+
+   console.log(input)
 
    //check if date entered is in valid DD-MM-YYYY format using regex
    if (dateRegex.test(input)) {
@@ -50,7 +47,7 @@ app.get("/api/:date", (req, res, next) => {
       const unix = new Date(Date.UTC(year, month - 1, day)) / 1000
 
       //get UTC date string
-      const utc = new Date(year, month - 1, day).toString()
+      const utc = new Date(Date.UTC(year, month - 1, day)).toUTCString()
 
       //send json object to client
       res.send({
@@ -59,13 +56,13 @@ app.get("/api/:date", (req, res, next) => {
       })
    }
 
-   //if not in correct date format, check to see if it is valid unix timestamp
+   //if not correct date format, check to see if it is valid unix timestamp
    else if (intRegex.test(input)) {
-      //convert timestamp to int and from s to ms
-      const convertedInput = parseInt(input) * 1000
+      //convert timestamp to int
+      const convertedInput = parseInt(input)
 
       //get UTC date string
-      const utc = new Date(convertedInput).toString()
+      const utc = new Date(convertedInput).toUTCString()
 
       //send json object to client
       res.send({
@@ -74,5 +71,10 @@ app.get("/api/:date", (req, res, next) => {
       })
    }
 
-   //if date is not valid format, check to see if it is a valid unix timestamp
+   //if not correctly formated date or unix timestamp, send error
+   else {
+      res.send({
+         error: "Invalid Date",
+      })
+   }
 })
