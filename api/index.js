@@ -3,6 +3,10 @@ const express = require("express")
 const app = express()
 const port = 3000
 
+//enable CORS
+const cors = require('cors')
+app.use(cors())
+
 //configure app to listen to port
 app.listen(port, () => {
    console.log(`App is listening at http://localhost:${port}/`)
@@ -27,11 +31,12 @@ app.get("/api/:date", (req, res) => {
    const input = req.params.date
 
    //create regular expressions to validate input from user
+   //regex for date in format DD-MM-YYYY
    const dateRegex = /^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[012])-\d{4}$/
-
+   
+   //regex for unix timestamp
    const intRegex = /^-?\d+$/
 
-   console.log(input)
 
    //check if date entered is in valid DD-MM-YYYY format using regex
    if (dateRegex.test(input)) {
