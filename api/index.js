@@ -8,7 +8,7 @@ const bodyParser = require("body-parser")
 app.use(bodyParser.urlencoded({ extended: false }))
 
 //enable CORS
-const cors = require('cors')
+const cors = require("cors")
 app.use(cors())
 
 //configure app to listen to port
@@ -37,10 +37,9 @@ app.get("/api/:date", (req, res) => {
    //create regular expressions to validate input from user
    //regex for date in format DD-MM-YYYY
    const dateRegex = /^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[012])-\d{4}$/
-   
+
    //regex for unix timestamp
    const intRegex = /^-?\d+$/
-
 
    //check if date entered is in valid DD-MM-YYYY format using regex
    if (dateRegex.test(input)) {
@@ -81,7 +80,7 @@ app.get("/api/:date", (req, res) => {
    }
 
    //if not correctly formated date or unix timestamp, send error
-   else {
+   {
       res.send({
          error: "Invalid Date",
       })
