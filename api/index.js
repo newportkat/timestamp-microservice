@@ -80,7 +80,7 @@ app.get("/api/:date", (req, res) => {
    }
 
    //if not correctly formated date or unix timestamp, send error
-   {
+   else {
       res.send({
          error: "Invalid Date",
       })
